@@ -17,6 +17,7 @@
  */
 
 #include "Accessor.h"
+#include "Async/Async.h"
 
 namespace FireboltSDK {
 
@@ -41,6 +42,7 @@ namespace FireboltSDK {
 
     Accessor::~Accessor()
     {
+        Async::Dispose();
         WPEFramework::Core::IWorkerPool::Assign(nullptr);
         _workerPool->Stop();
 

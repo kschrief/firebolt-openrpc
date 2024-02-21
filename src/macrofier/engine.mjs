@@ -108,7 +108,7 @@ const getTemplate = (name, templates) => {
 }
 
 const getTemplateTypeForMethod = (method, type, templates) => {
-  const name = method.tags ? (isXUsesMethod(method) && Object.keys(templates).find(name => name.startsWith(`/${type}/xuses.`))) ? 'xuses' : (method.tags.map(tag => tag.name.split(":").shift()).find(tag => Object.keys(templates).find(name => name.startsWith(`/${type}/${tag}.`)))) || 'default' : 'default'
+  const name = method.tags ? (isXUsesMethod(method) && Object.keys(templates).find(name => name.startsWith(`/${type}/x-uses.`))) ? 'x-uses' : (method.tags.map(tag => tag.name.split(":").shift()).find(tag => Object.keys(templates).find(name => name.startsWith(`/${type}/${tag}.`)))) || 'default' : 'default'
   const path = `/${type}/${name}`
   return getTemplate(path, templates)
 }

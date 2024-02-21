@@ -16,12 +16,37 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#pragma once
+#include "Async.h"
 
-#include "Transport/Transport.h"
-#include "Properties/Properties.h"
-#include "Async/Async.h"
-#include "Accessor/Accessor.h"
-#include "Logger/Logger.h"
-#include "TypesPriv.h"
-#include "types.h"
+namespace FireboltSDK {
+    Async* Async::_singleton = nullptr;
+    Async::Async()
+        : _methodMap()
+        , _adminLock()
+    {
+        ASSERT(_singleton == nullptr);
+        _singleton = this;
+    }
+
+    Async::~Async() /* override */
+    {
+        _singleton = nullptr;
+    }
+
+    /* static */ Async& Async::Instance()
+    {
+        static Async *instance = new Async();
+        ASSERT(instance != nullptr);
+        return *instance;
+    }
+
+    /* static */ void Async::Dispose()
+    {
+        ASSERT(_singleton != nullptr);
+
+        if (_singleton != nullptr) {
+            delete _singleton;
+        }
+    }
+}
+
