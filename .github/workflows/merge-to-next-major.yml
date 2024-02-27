@@ -37,7 +37,14 @@ jobs:
       - name: Update next-major package.json
         run: |
           jq '.version = "${{ steps.extract_version.outputs.version }}"' package.json > temp.json
-          mv temp.json package.json
+
+          if diff -q "package.json" "temp.json" >/dev/null; then
+            echo "Versions are identical. No change required."
+            rm temp.json
+          else
+            mv temp.json package.json
+            git add package.json && git commit -m "Sync next->next-major package.json"
+          fi
 
       # Attempt a dry-run merge
       - name: Attempt merge
@@ -89,13 +96,12 @@ jobs:
         run: |
           jq '.version = "${{ steps.extract_version.outputs.version }}"' package.json > temp.json
 
-          diff -q "package.json" "temp.json"
-
-          if [ "$?" -ne 0 ]; then
+          if diff -q "package.json" "temp.json" >/dev/null; then
+            echo "Versions are identical. No change required."
+            rm temp.json
+          else
             mv temp.json package.json
             git add package.json && git commit -m "Sync next->next-major package.json"
-          else
-            echo "Versions are identical. No change required."
           fi
 
       - name: Perform Merge
